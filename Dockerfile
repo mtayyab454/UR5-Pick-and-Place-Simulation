@@ -22,6 +22,16 @@ RUN apt-get update && \
 
 RUN apt-get update && apt-get install -y x11-apps && rm -rf /var/lib/apt/lists/*
 
+# Install required ROS controllers
+RUN apt-get update && \
+    apt-get install -y \
+    ros-noetic-ros-controllers \
+    ros-noetic-position-controllers \
+    ros-noetic-effort-controllers \
+    ros-noetic-joint-trajectory-controller \
+    ros-noetic-gripper-action-controller && \
+    rm -rf /var/lib/apt/lists/*
+
 # Initialize rosdep
 RUN rosdep init && rosdep update
 
