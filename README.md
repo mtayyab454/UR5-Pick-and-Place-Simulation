@@ -105,7 +105,7 @@ Test the UI apps can run:
 xeyes
 ```
 
-Setup the project:
+Setup the project (First time only):
 ```
 bash
 cd catkin_ws
@@ -113,6 +113,12 @@ source /opt/ros/noetic/setup.bash
 catkin build
 source devel/setup.bash
 echo "source $PWD/devel/setup.bash" >> $HOME/.bashrc
+```
+After the first time, you can run:
+```
+bash
+cd catkin_ws
+source devel/setup.bash
 ```
 
 ### Usage
@@ -126,10 +132,11 @@ Choose the level (from 1 to 4):
 rosrun levelManager levelManager.py -l [level]
 ```
 Start the kinematics process, (If stuck on controller, Click play to start the simulation)
+(If stuck on getting lego position, set vision=False)
 ```
 rosrun motion_planning motion_planning.py
 ```
-Start the localization process, (If stuck on getting lego position, set vision=False)
+Start the localization process
 ```
 rosrun vision vision.py -show
 ```
