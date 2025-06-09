@@ -46,7 +46,8 @@ RUN mkdir -p ~/UR5-Pick-and-Place-Simulation/catkin_ws/src
 # Fix Python setuptools compatibility issue for ROS Noetic
 RUN pip3 install --upgrade pip && \
     pip3 install setuptools==58.2.0 && \
-    pip3 install importlib-metadata==4.13.0
+    pip3 install importlib-metadata==4.13.0 && \
+    pip3 install pyquaternion
 
 # Clone and set up YOLOv5
 RUN cd ~ && \

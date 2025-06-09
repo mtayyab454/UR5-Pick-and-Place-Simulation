@@ -76,11 +76,30 @@ Setup docker image:
 ```
 docker build -t ur5-dev .
 ```
-And run it from **WSL2** (mapping your code and X11 for GUI):
+Go to the root dir in windows and run it from **WSL2** (mapping your code and X11 for GUI):
 ```
 # From WSL2 terminal (recommended for GUI apps)
 docker run --name ur5-dev -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v ${PWD}:/home/dev/UR5-Pick-and-Place-Simulation ur5-dev
 ```
+
+Optionally, if the container is already ruuning:
+```
+docker exec -it ur5-dev bash
+```
+
+If your dev container is already running:
+Open VS Code.
+Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on Mac).
+Type and select:
+```
+Dev Containers: Attach to Running Container...
+```
+Then select the `ur5-dev` container from the list.
+
+VS Code will open a new window connected to your container—you can browse files, run the terminal, install extensions, etc.
+
+
+
 Test the UI apps can run:
 ```
 xeyes
@@ -88,7 +107,8 @@ xeyes
 
 Setup the project:
 ```
-cd UR5-Pick-and-Place-Simulation/catkin_ws
+bash
+cd catkin_ws
 source /opt/ros/noetic/setup.bash
 catkin build
 source devel/setup.bash
