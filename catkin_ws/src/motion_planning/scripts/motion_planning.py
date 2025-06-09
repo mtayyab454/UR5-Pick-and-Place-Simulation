@@ -364,7 +364,7 @@ if __name__ == "__main__":
 
     print("Waiting for detection of the models")
     rospy.sleep(0.5)
-    legos = get_legos_pos(vision=True)
+    legos = get_legos_pos(vision=False)
     legos.sort(reverse=True, key=lambda a: (a[1].position.x, a[1].position.y))
 
     for model_name, model_pose in legos:

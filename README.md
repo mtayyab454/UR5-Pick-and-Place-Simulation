@@ -125,11 +125,11 @@ Choose the level (from 1 to 4):
 ```
 rosrun levelManager levelManager.py -l [level]
 ```
-Start the kinematics process
+Start the kinematics process, (If stuck on controller, Click play to start the simulation)
 ```
 rosrun motion_planning motion_planning.py
 ```
-Start the localization process
+Start the localization process, (If stuck on getting lego position, set vision=False)
 ```
 rosrun vision vision.py -show
 ```
