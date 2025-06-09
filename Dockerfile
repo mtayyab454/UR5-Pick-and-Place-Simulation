@@ -37,8 +37,16 @@ WORKDIR /home/$USERNAME
 SHELL ["/bin/bash", "-c"]
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
+# Update rosdep for user
+RUN rosdep update
+
 # Set up catkin workspace if not present
 RUN mkdir -p ~/UR5-Pick-and-Place-Simulation/catkin_ws/src
+
+# Fix Python setuptools compatibility issue for ROS Noetic
+RUN pip3 install --upgrade pip && \
+    pip3 install setuptools==58.2.0 && \
+    pip3 install importlib-metadata==4.13.0
 
 # Clone and set up YOLOv5
 RUN cd ~ && \

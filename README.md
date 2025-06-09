@@ -50,7 +50,7 @@ For running each sample code:
 
 ### Setup
 
-After installing the libraries needed to run the project. Clone this repo:
+<!-- After installing the libraries needed to run the project. Clone this repo:
 ```
 git clone https://github.com/pietrolechthaler/UR5-Pick-and-Place-Simulation/
 ```
@@ -70,7 +70,31 @@ cd ~
 git clone https://github.com/ultralytics/yolov5
 cd yolov5
 pip3 install -r requirements.txt
+``` -->
+
+Setup docker image:
 ```
+docker build -t ur5-dev .
+```
+And run it from **WSL2** (mapping your code and X11 for GUI):
+```
+# From WSL2 terminal (recommended for GUI apps)
+docker run --name ur5-dev -it -e DISPLAY=$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v ${PWD}:/home/dev/UR5-Pick-and-Place-Simulation ur5-dev
+```
+Test the UI apps can run:
+```
+xeyes
+```
+
+Setup the project:
+```
+cd UR5-Pick-and-Place-Simulation/catkin_ws
+source /opt/ros/noetic/setup.bash
+catkin build
+source devel/setup.bash
+echo "source $PWD/devel/setup.bash" >> $HOME/.bashrc
+```
+
 ### Usage
 
 Launch the world
