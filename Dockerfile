@@ -20,6 +20,8 @@ RUN apt-get update && \
     apt-get install -y libopencv-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y x11-apps && rm -rf /var/lib/apt/lists/*
+
 # Initialize rosdep
 RUN rosdep init && rosdep update
 
@@ -37,6 +39,12 @@ RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
 
 # Set up catkin workspace if not present
 RUN mkdir -p ~/UR5-Pick-and-Place-Simulation/catkin_ws/src
+
+# Clone and set up YOLOv5
+RUN cd ~ && \
+    git clone https://github.com/ultralytics/yolov5 && \
+    cd yolov5 && \
+    pip3 install -r requirements.txt
 
 # Set entrypoint to bash with ROS sourced
 ENTRYPOINT ["bash", "-c", "source /opt/ros/noetic/setup.bash && exec bash"]
