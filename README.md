@@ -98,6 +98,18 @@ Then select the `ur5-dev` container from the list.
 
 VS Code will open a new window connected to your container—you can browse files, run the terminal, install extensions, etc.
 
+(
+  Open the Command Palette
+Press: Ctrl + Shift + P (or Cmd + Shift + P on macOS)
+
+Type and select:
+“Terminal: Select Default Profile”
+
+You’ll see a list of available shells.
+Select: bash (e.g., /bin/bash)
+
+
+)
 
 
 Test the UI apps can run:
@@ -149,4 +161,4 @@ rosrun vision vision.py -show
 | Davice Cerpelloni    | https://github.com/davidecerpelloni  |
 | Leonardo Collizzolli | https://github.com/leocolliz         |
 | Pietro Lechthaler    | https://github.com/pietrolechthaler  |
-| Stefano Rizzi        | https://github.com/StefanoRizzi      |
+| Stefano Rizzi        | https://github.com/StefanoRizzi      | 
