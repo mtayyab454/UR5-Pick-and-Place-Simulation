@@ -6,6 +6,7 @@ import kinematics
 import control_msgs.msg
 import trajectory_msgs.msg
 from pyquaternion import Quaternion
+from std_srvs.srv import Empty
 
 
 def get_controller_state(controller_topic, timeout=None):
@@ -13,6 +14,30 @@ def get_controller_state(controller_topic, timeout=None):
         f"{controller_topic}/state",
         control_msgs.msg.JointTrajectoryControllerState,
         timeout=timeout)
+
+
+def ensure_gazebo_unpaused():
+    """Check if Gazebo is paused and unpause it if necessary."""
+    try:
+        # Try to get a controller state with a short timeout
+        rospy.wait_for_message(
+            "/trajectory_controller/state",
+            control_msgs.msg.JointTrajectoryControllerState,
+            timeout=2.0)
+        return True  # Gazebo is running
+    except rospy.ROSException:
+        # Gazebo might be paused, try to unpause it
+        rospy.loginfo("Gazebo appears to be paused. Attempting to unpause...")
+        try:
+            unpause_physics = rospy.ServiceProxy('/gazebo/unpause_physics', Empty)
+            unpause_physics.wait_for_service(timeout=5.0)
+            unpause_physics()
+            rospy.loginfo("Successfully unpaused Gazebo simulation.")
+            rospy.sleep(1.0)  # Give it a moment to start
+            return True
+        except (rospy.ServiceException, rospy.ROSException) as e:
+            rospy.logwarn(f"Could not unpause Gazebo automatically: {e}")
+            return False
 
 
 class ArmController:
@@ -31,9 +56,29 @@ class ArmController:
         self.default_joint_trajectory = trajectory_msgs.msg.JointTrajectory()
         self.default_joint_trajectory.joint_names = self.joint_names
 
-        joint_states = get_controller_state(controller_topic).actual.positions
-        x, y, z, rot = kinematics.get_pose(joint_states)
-        self.gripper_pose = (x, y, z), Quaternion(matrix=rot)
+        # Wait for controllers to be ready
+        print("Waiting for trajectory controller to be ready...")
+        rospy.loginfo("Waiting for trajectory controller to be ready...")
+        
+        # First check if Gazebo is running (unpaused)
+        if not ensure_gazebo_unpaused():
+            rospy.logwarn("Gazebo may be paused. Please click the Play button in Gazebo GUI to continue.")
+        
+        # Wait for the controller state topic to be available
+        timeout = 30.0  # 30 second timeout
+        try:
+            joint_states = get_controller_state(controller_topic, timeout=timeout).actual.positions
+            x, y, z, rot = kinematics.get_pose(joint_states)
+            self.gripper_pose = (x, y, z), Quaternion(matrix=rot)
+            print("Controller initialized successfully!")
+            rospy.loginfo("Controller initialized successfully!")
+        except rospy.ROSException as e:
+            rospy.logerr(f"Failed to initialize controller within {timeout} seconds.")
+            rospy.logerr("Please ensure:")
+            rospy.logerr("1. Gazebo is running")
+            rospy.logerr("2. The simulation is unpaused (click Play button)")
+            rospy.logerr("3. The robot controllers are loaded")
+            raise e
 
         # Create an action client for the joint trajectory
         self.joints_pub = rospy.Publisher(

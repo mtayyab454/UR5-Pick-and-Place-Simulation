@@ -143,8 +143,7 @@ Choose the level (from 1 to 4):
 ```
 rosrun levelManager levelManager.py -l [level]
 ```
-Start the kinematics process, (If stuck on controller, Click play to start the simulation)
-(If stuck on getting lego position, set vision=False)
+Start the kinematics process (The system will automatically unpause Gazebo if needed)
 ```
 rosrun motion_planning motion_planning.py
 ```
